@@ -284,6 +284,119 @@ function package_compile_crypto {
 	python3 ccache doxygen graphviz default-libmysqlclient-dev libnghttp2-dev librtmp-dev libssh2-1 libssh2-1-dev libldap2-dev libidn11-dev libpsl-dev
 }
 
+# Function to display messages in a consistent format
+print_message_yiimpool_end() {
+  # Color definitions (feel free to customize these for your liking)
+  YIIMP_GREEN="\e[38;5;2m"     # Success Green
+  YIIMP_BLUE="\e[38;5;4m"     # Dark Blue (info)
+  YIIMP_YELLOW="\e[33m"       # Warning Yellow
+  YIIMP_RED="\e[31m"        # Error Red
+  YIIMP_WHITE="\e[37m"       # White (data)
+  YIIMP_RESET="\e[0m"
+  # Header line
+  YIIMP_HEADER="${YIIMP_GREEN}<--------------------------------------------------------------------------->${YIIMP_RESET}"
+  echo -e "${YIIMP_HEADER}"
+  echo -e "${YIIMP_GREEN}Thanks for using Yiimpool Installer ${YIIMP_BLUE}${VERSION}${YIIMP_GREEN} (by Afiniel!)!${YIIMP_RESET}"
+  echo
+  echo -e "${YIIMP_BLUE}To run this installer anytime, simply type: ${YIIMP_GREEN}yiimpool${YIIMP_RESET}"
+  echo -e "${YIIMP_HEADER}"
+  echo -e "${YIIMP_BLUE}Like the installer and want to support the project? Use these wallets:"
+  echo -e "${YIIMP_HEADER}"
+  echo -e "${YIIMP_WHITE}- BTC: ${BTCDON}"
+  echo -e "${YIIMP_WHITE}- BCH: ${BCHDON}"
+  echo -e "${YIIMP_WHITE}- ETH: ${ETHDON}"
+  echo -e "${YIIMP_WHITE}- DOGE: ${DOGEDON}"
+  echo -e "${YIIMP_WHITE}- LTC: ${LTCDON}"
+  echo -e "${YIIMP_HEADER}"
+  echo
+  echo -e "${YIIMP_GREEN}Yiimp installation is now ${YIIMP_GREEN}complete!${YIIMP_RESET}"
+  echo -e "${YIIMP_YELLOW}Please REBOOT your machine to finalize updates and set folder permissions.${YIIMP_YELLOW} YiiMP won't function until a reboot is performed.${YIIMP_RESET}"
+  echo
+  echo -e "${YIIMP_BLUE}After the first reboot, it may take up to 1 minute for the ${YIIMP_GREEN}main${YIIMP_BLUE}|${YIIMP_GREEN}loop2${YIIMP_BLUE}|${YIIMP_GREEN}blocks${YIIMP_BLUE}|${YIIMP_GREEN}debug${YIIMP_BLUE} screens to start."
+  echo -e "${YIIMP_BLUE}If they show ${YIIMP_RED}stopped${YIIMP_BLUE} after 1 minute, type ${YIIMP_GREEN}motd${YIIMP_BLUE} to refresh the screen.${YIIMP_RESET}"
+  echo
+  echo -e "${YIIMP_BLUE}Access your ${YIIMP_GREEN}${AdminPanel} at ${YIIMP_BLUE}http://${DomainName}/site/${AdminPanel}${YIIMP_RESET}"
+  echo
+  echo -e "${YIIMP_RED}By default, all stratum ports are blocked by the firewall.${YIIMP_YELLOW} To allow a port, use ${YIIMP_GREEN}sudo ufw allow <port number>${YIIMP_YELLOW} from the command line.${YIIMP_RESET}"
+  echo -e "${YIIMP_WHITE}Database usernames and passwords can be found in ${YIIMP_RED}$STORAGE_ROOT/yiimp/.my.cnf${YIIMP_RESET}"
+}
+
+# Function to display colored text
+print_message() {
+    local color=$1
+    local message=$2
+    echo -e "${color}${message}${NC}"
+}
+
+# Function to safely add cron jobs
+add_cron_job() {
+    local cron_command=$1
+    (crontab -l 2>/dev/null | grep -v "$cron_command"; echo "$cron_command") | crontab -
+}
+
+# Function to check if stratum exists
+check_stratum() {
+    local algo=$1
+    if [ ! -f "$STRATUM_DIR/run.sh" ]; then
+        echo "[$(date)] Error: Stratum run script not found for $algo" >> $LOG_DIR/stratum.log
+        return 1
+    fi
+    return 0
+}
+
+# Create user functions.
+
+create_user() {
+    local username=$1
+    local password=$2
+    
+    # Add user with more secure defaults
+    sudo adduser ${username} --gecos "Yiimpool Admin,,,," --disabled-password
+    echo "${username}:${password}" | sudo chpasswd
+    
+    # Add to sudo group and configure sudo access
+    sudo usermod -aG sudo ${username}
+    
+    # Configure stronger sudo rules
+    echo "# ${username} sudo configuration
+${username} ALL=(ALL) NOPASSWD: /usr/bin/yiimpool
+${username} ALL=(ALL) ALL" | sudo tee "/etc/sudoers.d/${username}" > /dev/null
+    sudo chmod 440 "/etc/sudoers.d/${username}"
+}
+
+setup_ssh_key() {
+    local username=$1
+    local ssh_key=$2
+    
+    # Create SSH directory with secure permissions
+    sudo mkdir -p "/home/${username}/.ssh"
+    sudo touch "/home/${username}/.ssh/authorized_keys"
+    echo "$ssh_key" | sudo tee "/home/${username}/.ssh/authorized_keys" > /dev/null
+    sudo chown -R "${username}:${username}" "/home/${username}/.ssh"
+    sudo chmod 700 "/home/${username}/.ssh"
+    sudo chmod 600 "/home/${username}/.ssh/authorized_keys"
+}
+
+setup_yiimpool_command() {
+    local username=$1
+    
+    # Create yiimpool command with proper permissions
+    echo '#!/bin/bash
+cd ~/Yiimpoolv1/install
+bash start.sh' | sudo tee /usr/bin/yiimpool > /dev/null
+    sudo chmod 755 /usr/bin/yiimpool
+}
+
+configure_storage() {
+    # Create storage user and directory if they don't exist
+    if ! id -u $STORAGE_USER >/dev/null 2>&1; then
+        sudo useradd -m $STORAGE_USER
+    fi
+    sudo mkdir -p $STORAGE_ROOT
+    sudo chown $STORAGE_USER:$STORAGE_USER $STORAGE_ROOT
+    sudo chmod 750 $STORAGE_ROOT
+}
+
 # Function to check if a package is installed and install it if not
 install_if_not_installed() {
   local package="$1"

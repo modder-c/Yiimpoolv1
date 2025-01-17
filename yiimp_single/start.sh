@@ -69,49 +69,7 @@ source server_harden.sh
 source $STORAGE_ROOT/yiimp/.yiimp.conf
 
 clear
-
-
-# Color definitions (feel free to customize these for your liking)
-YIIMP_GREEN="\e[38;5;2m"     # Success Green
-YIIMP_BLUE="\e[38;5;4m"     # Dark Blue (info)
-YIIMP_YELLOW="\e[33m"       # Warning Yellow
-YIIMP_RED="\e[31m"        # Error Red
-YIIMP_WHITE="\e[37m"       # White (data)
-YIIMP_RESET="\e[0m"
-
-# Header line
-YIIMP_HEADER="${YIIMP_GREEN}<--------------------------------------------------------------------------->${YIIMP_RESET}"
-
-# Function to display messages in a consistent format
-print_message() {
-  echo -e "${YIIMP_HEADER}"
-  echo -e "${YIIMP_GREEN}Thanks for using Yiimpool Installer ${YIIMP_BLUE}${VERSION}${YIIMP_GREEN} (by Afiniel!)!${YIIMP_RESET}"
-  echo
-  echo -e "${YIIMP_BLUE}To run this installer anytime, simply type: ${YIIMP_GREEN}yiimpool${YIIMP_RESET}"
-  echo -e "${YIIMP_HEADER}"
-  echo -e "${YIIMP_BLUE}Like the installer and want to support the project? Use these wallets:"
-  echo -e "${YIIMP_HEADER}"
-  echo -e "${YIIMP_WHITE}- BTC: ${BTCDON}"
-  echo -e "${YIIMP_WHITE}- BCH: ${BCHDON}"
-  echo -e "${YIIMP_WHITE}- ETH: ${ETHDON}"
-  echo -e "${YIIMP_WHITE}- DOGE: ${DOGEDON}"
-  echo -e "${YIIMP_WHITE}- LTC: ${LTCDON}"
-  echo -e "${YIIMP_HEADER}"
-  echo
-  echo -e "${YIIMP_GREEN}Yiimp installation is now ${YIIMP_GREEN}complete!${YIIMP_RESET}"
-  echo -e "${YIIMP_YELLOW}Please REBOOT your machine to finalize updates and set folder permissions.${YIIMP_YELLOW} YiiMP won't function until a reboot is performed.${YIIMP_RESET}"
-  echo
-  echo -e "${YIIMP_BLUE}After the first reboot, it may take up to 1 minute for the ${YIIMP_GREEN}main${YIIMP_BLUE}|${YIIMP_GREEN}loop2${YIIMP_BLUE}|${YIIMP_GREEN}blocks${YIIMP_BLUE}|${YIIMP_GREEN}debug${YIIMP_BLUE} screens to start."
-  echo -e "${YIIMP_BLUE}If they show ${YIIMP_RED}stopped${YIIMP_BLUE} after 1 minute, type ${YIIMP_GREEN}motd${YIIMP_BLUE} to refresh the screen.${YIIMP_RESET}"
-  echo
-  echo -e "${YIIMP_BLUE}Access your ${YIIMP_GREEN}${AdminPanel} at ${YIIMP_BLUE}http://${DomainName}/site/${AdminPanel}${YIIMP_RESET}"
-  echo
-  echo -e "${YIIMP_RED}By default, all stratum ports are blocked by the firewall.${YIIMP_YELLOW} To allow a port, use ${YIIMP_GREEN}sudo ufw allow <port number>${YIIMP_YELLOW} from the command line.${YIIMP_RESET}"
-  echo -e "${YIIMP_WHITE}Database usernames and passwords can be found in ${YIIMP_RED}$STORAGE_ROOT/yiimp/.my.cnf${YIIMP_RESET}"
-}
-
 term_yiimpool
-print_message
+print_message_yiimpool_end
 exit 0
 ask_reboot
-
