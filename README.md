@@ -5,7 +5,7 @@
   <img alt="GitHub issues" src="https://img.shields.io/github/issues/afiniel/yiimp_install_script">
   <img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/afiniel/yiimp_install_script">
 </p>
-
+c
 ## Description
 
 This installer provides an automated way to set up a full Yiimp mining pool on Ubuntu 18.04/20.04. Key features include:
