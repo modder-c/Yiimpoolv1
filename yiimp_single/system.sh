@@ -270,7 +270,7 @@ sudo update-alternatives --set php /usr/bin/php7.3
 
 echo
 echo -e "$CYAN => Cloning Yiimp Repo <= ${NC}"
-hide_output sudo  git clone https://github.com/MattF42/yiimp.git "$STORAGE_ROOT/yiimp/yiimp_setup/yiimp" 
+hide_output sudo  git clone https://github.com/afiniel/yiimp.git "$STORAGE_ROOT/yiimp/yiimp_setup/yiimp" 
 
 hide_output sudo service nginx restart
 sleep 0.5
