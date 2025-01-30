@@ -2,6 +2,7 @@ INSERT INTO `algos` (`name`, `color`, `speedfactor`, `port`, `visible`, `powlimi
 ('0x10', '#aba0e0', 1, 8335, 1, NULL),
 ('a5a', '#f0f0f0', 1, 8633, 1, NULL),
 ('aergo', '#e0d0e0', 1, 3691, 1, NULL),
+('kawpow', '#e0d0e0', 1, 5050, 1, NULL),
 ('allium', '#80a0d0', 1, 4443, 1, NULL),
 ('anime', '#80a0d0', 1, 4230, 1, NULL),
 ('argon2d-dyn', '#e0d0e0', 1, 4239, 1, NULL),
