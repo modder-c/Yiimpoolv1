@@ -9,6 +9,7 @@
 #####################################################
 
 source /etc/yiimpool.conf
+source /etc/yiimpooldonate.conf
 source /etc/functions.sh
 source /etc/daemonbuilder.sh
 source $STORAGE_ROOT/yiimp/.yiimp.conf
@@ -192,7 +193,7 @@ source $STORAGE_ROOT/yiimp/.yiimp.conf
 STRATUM_DIR=$STORAGE_ROOT/yiimp/site/stratum
 LOG_DIR=$STORAGE_ROOT/yiimp/site/log
 #!/usr/bin/env bash
-'""''"${coinsymbollower}"''""'="screen -dmS '""''"${coinsymbollower}"''""' bash $STRATUM_DIR/run.sh '""''"${coinsymbollower}"''""'.'""''"${coinalgo}"''""'"
+'""''"${coinsymbollower}"''""'="screen -dmS '""''"${coinsymbollower}"''""' bash $STRATUM_DIR/run.sh '""''"${coinsymbollower}"''""'.'""''"${coinalgo}"''".conf"'"
 '""''"${coinsymbollower}"''""'stop="'screen -X -S ${coinsymbollower} quit'"
 startstop_'""''"${coinsymbollower}"''""'() {
     cmd=$1
@@ -233,16 +234,17 @@ echo
 echo -e "$YELLOW Starting your new stratum...${NC}"
 bash stratum.${coinsymbollower} start ${coinsymbollower}
 
-if [[("$CREATECOIN" == 'true')]]; then
+if [[ ("$CREATECOIN" == "true") ]]; then
 	echo '
 	COINPORT='""''"${coinport}"''""'
 	COINALGO='""''"${coinalgo}"''""'
-	' | sudo -E tee $STORAGE_ROOT/daemon_builder/.addport.cnf >/dev/null 2>&1;
+	' | sudo -E tee $STORAGE_ROOT/daemon_builder/.addport.cnf >/dev/null 2>&1
 	echo -e "$CYAN --------------------------------------------------------------------------- 	${NC}"
 	echo -e "$GREEN    The assigned dedicated port for this coins stratum is :$YELLOW $coinport ${NC}"
 	echo -e "$GREEN    Addport finish return to config...										${NC}"
 	echo -e "$CYAN --------------------------------------------------------------------------- 	${NC}"
 	sleep 4
+	exit 0
 else
 	echo -e "$YELLOW Your new stratum is$GREEN started...$YELLOW Do NOT run the start command manually...${NC}"
 	echo
@@ -258,10 +260,10 @@ else
 	echo
 	echo -e "$CYAN  --------------------------------------------------------------------------- 	${NC}"
 	echo -e "$GREEN	Donations are welcome at wallets below:					  	${NC}"
-	echo -e "$YELLOW  BTC: ${NC} $MAGENTA ${BTCDEP}	${NC}"
-	echo -e "$YELLOW  LTC: ${NC} $MAGENTA ${LTCDEP}	${NC}"
-	echo -e "$YELLOW  ETH: ${NC} $MAGENTA ${ETHDEP}	${NC}"
-	echo -e "$YELLOW  BCH: ${NC} $MAGENTA ${DOGEDEP}	${NC}"
+	echo -e "$YELLOW  BTC: ${NC} $MAGENTA ${BTCDON}	${NC}"
+	echo -e "$YELLOW  LTC: ${NC} $MAGENTA ${LTCDON}	${NC}"
+	echo -e "$YELLOW  ETH: ${NC} $MAGENTA ${ETHDON}	${NC}"
+	echo -e "$YELLOW  BCH: ${NC} $MAGENTA ${DOGEDON}	${NC}"
 	echo -e "$CYAN  --------------------------------------------------------------------------- 	${NC}"
 	echo
 	cd ~
